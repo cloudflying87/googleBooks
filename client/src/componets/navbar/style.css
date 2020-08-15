@@ -1,0 +1,28 @@
+a {
+    color:black;
+}
+
+a:hover{
+    color: black;
+    text-decoration: underline;
+}
+
+.title {
+    font-size: 30px;
+    color: black;
+    font-weight: 600; 
+}
+
+.subMenu{
+    font-size:20px;
+    list-style: none;
+    margin: 20px;
+}
+
+.active {
+    color: #16ccc3
+}
+
+.not-active {
+    color: #08625e
+}
