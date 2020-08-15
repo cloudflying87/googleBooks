@@ -1,14 +1,15 @@
 import React, {useState} from "react";
 import SearchBar from '../componets/searchbar/index'
-import { Row , Col } from '../componets/grid/index'
 import {List} from '../componets/list/index'
 import Book from '../componets/book/index'
+import Alert from '../componets/Alert/index'
 import API from '../utils/API'
 
 export default function Home(){
     const [search, setSearch] = useState("");
     const [bookState, setBook] = useState({
         books: [],
+        save: false,
         message: "Search for a book"
     })
 
@@ -42,52 +43,55 @@ export default function Home(){
           googleId: bookFind.id,
           title: bookFind.volumeInfo.title,
           subtitle: bookFind.volumeInfo.subtitle,
-          link: bookFind.volumeInfo.infoLink,
           authors: bookFind.volumeInfo.authors,
           description: bookFind.volumeInfo.description,
-          image: bookFind.volumeInfo.imageLinks.thumbnail
+          image: bookFind.volumeInfo.imageLinks.thumbnail,
+          link: bookFind.volumeInfo.infoLink,
         })
         .then(() => getBooks())
         .catch(console.error)
-
       };
+      const bookSavedMessage = () => {
+        setBook({...bookState, save:true})
+      }
     return(
         <>
-        <SearchBar
-            handleFormSubmit={handleFormSubmit}
-            handleInputChange={handleInputChange}
-            results={search}
-        />
-        <Row>
-          <Col size="md-12">
+            <SearchBar
+                handleFormSubmit={handleFormSubmit}
+                handleInputChange={handleInputChange}
+                results={search}
+            />
+            <Alert style={{ opacity: bookState.save ? 1 : 0 }}
+            />
             
-              {bookState.books.length ? (
-                <List>
-                  {bookState.books.map(book => (
-                    <Book
-                      key={book.id}
-                      title={book.volumeInfo.title}
-                      subtitle={book.volumeInfo.subtitle}
-                      link={book.volumeInfo.infoLink}
-                      authors={book.volumeInfo.authors.join(", ")}
-                      description={book.volumeInfo.description}
-                      image={book.volumeInfo.imageLinks.thumbnail}
-                      Button={() => (
-                        <button
-                          onClick={() => handleBookSave(book.id)}
-                          className="btn btn-primary ml-2"
-                        >
-                          Save
-                        </button>
-                      )}
-                    />
-                  ))}
-                </List>
-              ) : (
-                <h2 className="text-center">{bookState.message}</h2>
-              )}
-          </Col>
-        </Row>
+            {bookState.books.length ? (
+            <List>
+                {bookState.books.map(book => (
+                <Book
+                    key={book.id}
+                    title={book.volumeInfo.title}
+                    subtitle={book.volumeInfo.subtitle}
+                    link={book.volumeInfo.infoLink}
+                    authors={book.volumeInfo.authors.join(", ")}
+                    description={book.volumeInfo.description}
+                    image={book.volumeInfo.imageLinks.thumbnail}
+                    Button={() => (
+                    <button
+                        onClick={() => {
+                            handleBookSave(book.id);
+                            bookSavedMessage()
+                            }}
+                        className="btn btn-primary ml-2"
+                    >
+                        Save
+                    </button>
+                    )}
+                />
+                ))}
+            </List>
+            ) : (
+            <h2 className="text-center">{bookState.message}</h2>
+            )}
         </>
     )
 }
