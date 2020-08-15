@@ -61,8 +61,9 @@ export default function Home(){
                 handleInputChange={handleInputChange}
                 results={search}
             />
-            <Alert style={{ opacity: bookState.save ? 1 : 0 }}
-            />
+            <Alert style={{ opacity: bookState.save ? 1 : 0 }}>
+                Book Saved Successfully!
+            </Alert>
             
             {bookState.books.length ? (
             <List>
